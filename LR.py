@@ -3,37 +3,27 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-data=pd.read_excel('electricity_bill.xlsx')
-print(data.head())
 
-#sns.heatmap(data.isnull(),yticklabels=False,cbar=False,cmap='viridis')
-#plt.figure(figsize=(10,10))
-#sns.boxplot('Units','Month',None,data)
+data=pd.read_excel('electricity_bill2.xlsx')
+test_data=pd.read_excel('test_again.xlsx')
+print(test_data)
+#print(data)
+x=data[['Year','Month']]
+y=data[['Amount']]
+test_x=test_data[['Year','Month']]
+#print(test_x)
+test_y=test_data[['Amount']]
 
+from sklearn.linear_model import LogisticRegression
 
-x=data.iloc[:,:-1]
-y=data.iloc[:,3]
-month=pd.get_dummies(x['Month'],drop_first=True)
-x= x.drop('Month',axis=1,inplace=True)
-x=pd.concat([x,month],axis=1)
-print(x.head())
+logmodel=LogisticRegression()
+logmodel.fit(x,y)
 
-from sklearn.model_selection import train_test_split
+#logmodel.fit(test_x,test_y)
 
-x_train,x_test,y_train,y_test=train_test_split(data.drop('Amount',axis=1),data['Amount'],test_size=0.30,random_state=101)
-
-from sklearn.linear_model import LinearRegression
-
-logmodel=LinearRegression()
-logmodel.fit(x_train,y_train)
-
-prediction=logmodel.predict(x_test)
+prediction=logmodel.predict(test_x)
 print(prediction)
 
-from sklearn.metrics import confusion_matrix
-
-accuracy=confusion_matrix(y_test,prediction)
-print(accuracy)
 
 
 
@@ -49,8 +39,3 @@ print(accuracy)
 
 
 
-
-
-
-
-#plt.show()
